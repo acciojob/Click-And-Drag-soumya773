@@ -1,39 +1,29 @@
-// Your code here.
-const container = document.getElementById('container');
-const cubes = document.querySelectorAll('.cube');
-let selected = null;
-let offsetX, offsetY;
+const slider = document.querySelector('.items');
+let isDown = false;
+let startX;
+let scrollLeft;
 
-cubes.forEach(cube => {
-  cube.addEventListener('mousedown', (e) => {
-    selected = cube;
-    offsetX = e.clientX - cube.offsetLeft;
-    offsetY = e.clientY - cube.offsetTop;
-    cube.style.cursor = 'grabbing';
-  });
+slider.addEventListener('mousedown', (e) => {
+  isDown = true;
+  slider.classList.add('active');
+  startX = e.pageX - slider.offsetLeft;
+  scrollLeft = slider.scrollLeft;
 });
 
-document.addEventListener('mousemove', (e) => {
-  if (selected) {
-    const containerRect = container.getBoundingClientRect();
-    const cubeWidth = selected.offsetWidth;
-    const cubeHeight = selected.offsetHeight;
-
-    let x = e.clientX - containerRect.left - offsetX;
-    let y = e.clientY - containerRect.top - offsetY;
-
-    // Boundaries
-    x = Math.max(0, Math.min(container.offsetWidth - cubeWidth, x));
-    y = Math.max(0, Math.min(container.offsetHeight - cubeHeight, y));
-
-    selected.style.left = `${x}px`;
-    selected.style.top = `${y}px`;
-  }
+slider.addEventListener('mouseleave', () => {
+  isDown = false;
+  slider.classList.remove('active');
 });
 
-document.addEventListener('mouseup', () => {
-  if (selected) {
-    selected.style.cursor = 'grab';
-    selected = null;
-  }
+slider.addEventListener('mouseup', () => {
+  isDown = false;
+  slider.classList.remove('active');
+});
+
+slider.addEventListener('mousemove', (e) => {
+  if (!isDown) return;
+  e.preventDefault();
+  const x = e.pageX - slider.offsetLeft;
+  const walk = (x - startX) * 1; // adjust speed if needed
+  slider.scrollLeft = scrollLeft - walk;
 });
