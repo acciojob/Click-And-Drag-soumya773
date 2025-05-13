@@ -19,12 +19,14 @@ body {
 }
 
 .items {
-  width: 400px;
-  overflow-x: auto;
-  white-space: nowrap;
-  border: 2px solid black;
-  cursor: grab;
+  position: relative;
+  width: 500px;
+  height: 300px; /* make sure this is present */
+  background: white;
+  border: 2px solid #333;
+  overflow: hidden;
 }
+
 .items.active {
   background: rgba(255,255,255,0.3);
   cursor: grabbing;
