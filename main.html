@@ -16,6 +16,57 @@
 
 <script>
 //Your code goes here 
+	const container = document.querySelector('.items');
+const items = document.querySelectorAll('.item');
+
+let selectedItem = null;
+let offsetX = 0;
+let offsetY = 0;
+
+items.forEach(item => {
+  // Make each item absolutely positioned inside the container
+  const rect = item.getBoundingClientRect();
+  const containerRect = container.getBoundingClientRect();
+  item.style.position = 'absolute';
+  item.style.left = `${rect.left - containerRect.left}px`;
+  item.style.top = `${rect.top - containerRect.top}px`;
+
+  // Enable dragging
+  item.addEventListener('mousedown', (e) => {
+    selectedItem = item;
+    const itemRect = item.getBoundingClientRect();
+    offsetX = e.clientX - itemRect.left;
+    offsetY = e.clientY - itemRect.top;
+    item.style.cursor = 'grabbing';
+  });
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (selectedItem) {
+    const containerRect = container.getBoundingClientRect();
+
+    let x = e.clientX - containerRect.left - offsetX;
+    let y = e.clientY - containerRect.top - offsetY;
+
+    // Constrain within container
+    const maxX = container.clientWidth - selectedItem.offsetWidth;
+    const maxY = container.clientHeight - selectedItem.offsetHeight;
+
+    x = Math.max(0, Math.min(x, maxX));
+    y = Math.max(0, Math.min(y, maxY));
+
+    selectedItem.style.left = `${x}px`;
+    selectedItem.style.top = `${y}px`;
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  if (selectedItem) {
+    selectedItem.style.cursor = 'grab';
+    selectedItem = null;
+  }
+});
+
 </script>
 
   </body>
